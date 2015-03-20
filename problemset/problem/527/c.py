@@ -21,32 +21,22 @@ V 1
 2
 """
 
-#hs = [0,2,3]
-#vs = [0,2,3,1,4]
+dt = { 'H': [], 'V': [] }
 
-hs = []
-vs = []
+sizes = map(int, raw_input().split())
+n = sizes[2]
 
-sizes = list(raw_input())
-print sizes
-counter=sizes(2)
+for x in xrange(n):
+  (k, v) = raw_input().split()
+  dt[k].append( int(v) )
+  dt[k] = sorted( dt[k], reverse=True )
 
-while counter==0:
-  s = list(raw_input())
-  if s[0] == "H":
-    hs.append.append(s[1])
-    hs = sorted(hs, reverse=True)
-  elif s[0] == "V":
-    vs.append.append(s[1])
-    vs = sorted(vs, reverse=True)
-
-  hs2 = [0] + hs + [size[1]]
-  hdiffs = [ hs2[i] - hs2[i+1] for i in xrange(len(hs2)-1) ]
+  hs = [sizes[1]] + dt['H'] + [0]
+  hdiffs = [ hs[i] - hs[i+1] for i in xrange(len(hs)-1) ]
   maxh = max(hdiffs)
 
-  vs2 = [0] + hv + [size[0]]
-  vdiffs = [ vs2[i] - vs2[i+1] for i in xrange(len(vs2)-1) ]
+  vs = [sizes[0]] + dt['V'] + [0]
+  vdiffs = [ vs[i] - vs[i+1] for i in xrange(len(vs)-1) ]
   maxv = max(vdiffs)
 
   print maxh * maxv
-  counter-=1
