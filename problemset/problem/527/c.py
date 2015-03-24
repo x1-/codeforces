@@ -1,5 +1,6 @@
 import sys
 import time
+import heapq
 
 """
     C. Glass Carving
@@ -62,39 +63,27 @@ H 3
 
 sizes = map(int, raw_input().split())
 
-start = time.clock()
+#start = time.clock()
 
-dt =    { 'H': [sizes[1], 0], 'V': [sizes[0], 0] }
+dt =    { 'H': [], 'V': [] }
 diffs = { 'H': [sizes[1]], 'V': [sizes[0]] }
-#diffs = { 'H': sizes[1], 'V': sizes[0] }
-ct =    { 'H': 2, 'V': 2 }
+
+heapq.heappush( dt['V'], 0 )
+heapq.heappush( dt['V'], sizes[0] )
+heapq.heappush( dt['H'], 0 )
+heapq.heappush( dt['H'], sizes[1] )
 
 for x in xrange(sizes[2]):
   (k, v) = raw_input().split()
+
   pos = int(v)
+  heapq.heappush( dt[k], pos )
 
-  if ct[k] > 2 and pos > dt[k][1]:
-    diffs[k].insert( 1, pos - dt[k][1] )
-    diffs[k][0] = dt[k][0] - pos
-    dt[k].insert( 1, pos )
-  elif ct[k] > 2 and dt[k][-2] > pos:
-    diffs[k].insert( -1, dt[k][-2] - pos )
-    diffs[k][-1] = pos
-    dt[k].insert( -1,  pos )
-  else:
-    for i in xrange(ct[k]-1):
-      if pos > dt[k][i+1] and pos < dt[k][i]:
-        diffs[k][i] = dt[k][i] - pos
-        diffs[k].insert( i+1, pos - dt[k][i+1] )
-        dt[k].insert( i+1, pos )
-        break
+  dt[k] = [heapq.heappop(dt[k]) for i in xrange(len(dt[k]))]
+  diffs[k] = list(dt[k])
+  diffs[k] = [diffs[k][i] - diffs[k][i-1] for i in xrange(len(diffs[k])-1, 0, -1)]
 
-  ct[k] += 1
+  print heapq.nlargest(1, diffs['H']).pop() * heapq.nlargest(1, diffs['V']).pop()
 
-  print dt
-  print diffs
-
-  print max(diffs['H']) * max(diffs['V'])
-
-end = time.clock()
-print end - start
+#end = time.clock()
+#print end - start
