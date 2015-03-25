@@ -97,7 +97,7 @@ H 3
 
 sizes = map(int, raw_input().split())
 
-start = time.clock()
+#start = time.clock()
 
 dt   =  { 'H': array('I', [0, sizes[1]]), 'V': array('I', [0, sizes[0]]) }
 sets =  { 'H': {sizes[1]: 1}, 'V': {sizes[0]: 1} }
@@ -107,7 +107,7 @@ for x in xrange(sizes[2]):
 
   pos = int(v)
 
-  idx = search( dt[k], pos )
+  idx = bisect.bisect_left(dt[k], pos, lo=1, hi=len(dt[k])-1)
 
   diff1 = dt[k][idx] - pos
   diff2 = pos - dt[k][idx-1]
@@ -121,5 +121,5 @@ for x in xrange(sizes[2]):
 
   print max(sets['H'].keys()) * max(sets['V'].keys())
 
-end = time.clock()
-print end - start
+#end = time.clock()
+#print end - start
