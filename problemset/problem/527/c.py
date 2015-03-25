@@ -1,6 +1,39 @@
 import sys
 import time
-import heapq
+import bisect
+
+#def search( xs, target ):
+#  high = 1
+#  low = len(xs) - 1
+#  idx = low/2
+#
+#  if target < xs[low-1]:
+#    return low
+#  elif target > xs[high]:
+#    return high
+#
+#  while(low<high):
+#    if xs[idx-1] > target and target > xs[idx]:
+#      break
+#    elif target > xs[idx]:
+#      low = idx + 1
+#    elif target < xs[idx]:
+#      high = idx - 1
+#
+#    idx = (high + low)/2
+#
+#  return idx
+
+def incr_dict( dt, key ):
+  v = dt.setdefault( key, 0 )
+  dt[key] += 1
+
+def decr_dict( dt, key ):
+  if dt[key] == 1:
+    del dt[key]
+  else:
+    dt[key] -= 1
+
 
 """
     C. Glass Carving
@@ -62,27 +95,28 @@ H 3
 
 sizes = map(int, raw_input().split())
 
-start = time.clock()
+#start = time.clock()
 
-dt =    { 'H': [], 'V': [] }
-diffs = { 'H': [sizes[1]], 'V': [sizes[0]] }
-
-heapq.heappush( dt['V'], 0 )
-heapq.heappush( dt['V'], sizes[0] )
-heapq.heappush( dt['H'], 0 )
-heapq.heappush( dt['H'], sizes[1] )
+dt =    { 'H': [0, sizes[1]], 'V': [0, sizes[0]] }
+sets =  { 'H': {sizes[1]: 1}, 'V': {sizes[0]: 1} }
 
 for x in xrange(sizes[2]):
   (k, v) = raw_input().split()
 
   pos = int(v)
-  heapq.heappush( dt[k], pos )
+  idx = bisect.bisect_right( dt[k], pos, lo=1, hi=len(dt[k])-1 )
 
-  dt[k] = [heapq.heappop(dt[k]) for i in xrange(len(dt[k]))]
-  diffs[k] = list(dt[k])
-  diffs[k] = [diffs[k][i] - diffs[k][i-1] for i in xrange(len(diffs[k])-1, 0, -1)]
+  diff1 = dt[k][idx] - pos
+  diff2 = pos - dt[k][idx-1]
+  diff = diff1 + diff2
 
-  print heapq.nlargest(1, diffs['H']).pop() * heapq.nlargest(1, diffs['V']).pop()
+  dt[k].insert( idx, pos )
 
-end = time.clock()
-print end - start
+  decr_dict( sets[k], diff )
+  incr_dict( sets[k], diff1 )
+  incr_dict( sets[k], diff2 )
+
+  print max(sets['H'].keys()) * max(sets['V'].keys())
+
+#end = time.clock()
+#print end - start

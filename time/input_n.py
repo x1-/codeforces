@@ -1,8 +1,8 @@
 import sys
 import time
-import heapq
 
 """
+import heapq
 
 size = int( raw_input() )
 start = time.clock()
@@ -31,10 +31,14 @@ import random
 from random import Random
 r = Random()
 
-nums = range(1, 200000)
+size = input()
+
+nums = range(1, size)
 r.shuffle(nums)
 
 hv = ['H', 'V']
+
+print "2 %d %d" % ( size, size - 1 )
 
 for n in nums:
   print "H %d" % ( n )
