@@ -1,39 +1,41 @@
 import sys
 import time
 import bisect
+from array import array
 
-#def search( xs, target ):
-#  high = 1
-#  low = len(xs) - 1
-#  idx = low/2
-#
-#  if target < xs[low-1]:
-#    return low
-#  elif target > xs[high]:
-#    return high
-#
-#  while(low<high):
-#    if xs[idx-1] > target and target > xs[idx]:
-#      break
-#    elif target > xs[idx]:
-#      low = idx + 1
-#    elif target < xs[idx]:
-#      high = idx - 1
-#
-#    idx = (high + low)/2
-#
-#  return idx
+def search( xs, target ):
+  high = len(xs)-1
+  low = 1
+  idx = high/2
+
+  if target < xs[low]:
+    return low
+  elif target > xs[high-1]:
+    return high
+
+  while(low<high):
+    if xs[idx] > target and target > xs[idx-1]:
+      break
+    elif target > xs[idx]:
+      low = idx + 1
+    elif target < xs[idx]:
+      high = idx - 1
+
+    idx = (high + low)/2
+
+  return idx
 
 def incr_dict( dt, key ):
   v = dt.setdefault( key, 0 )
   dt[key] += 1
+  return dt
 
 def decr_dict( dt, key ):
   if dt[key] == 1:
     del dt[key]
   else:
     dt[key] -= 1
-
+  return dt
 
 """
     C. Glass Carving
@@ -95,16 +97,17 @@ H 3
 
 sizes = map(int, raw_input().split())
 
-#start = time.clock()
+start = time.clock()
 
-dt =    { 'H': [0, sizes[1]], 'V': [0, sizes[0]] }
+dt   =  { 'H': array('I', [0, sizes[1]]), 'V': array('I', [0, sizes[0]]) }
 sets =  { 'H': {sizes[1]: 1}, 'V': {sizes[0]: 1} }
 
 for x in xrange(sizes[2]):
   (k, v) = raw_input().split()
 
   pos = int(v)
-  idx = bisect.bisect_right( dt[k], pos, lo=1, hi=len(dt[k])-1 )
+
+  idx = search( dt[k], pos )
 
   diff1 = dt[k][idx] - pos
   diff2 = pos - dt[k][idx-1]
@@ -118,5 +121,5 @@ for x in xrange(sizes[2]):
 
   print max(sets['H'].keys()) * max(sets['V'].keys())
 
-#end = time.clock()
-#print end - start
+end = time.clock()
+print end - start
