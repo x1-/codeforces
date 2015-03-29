@@ -1,5 +1,5 @@
 import sys
-#import time
+import time
 from array import array
 
 def incr_dict( dt, key ):
@@ -77,7 +77,7 @@ H 3
 
 sizes = map(int, raw_input().split())
 
-#start = time.clock()
+start = time.clock()
 
 a = array('I', [0 for _ in xrange(sizes[2])])
 t = array('c', [' ' for _ in xrange(sizes[2])])
@@ -89,59 +89,152 @@ dtH = array('B', [0 for _ in xrange(sizes[1]+1)])
 dtH[0] = 1
 dtH[sizes[1]] = 1
 
+sV = array('I', [0 for _ in xrange(sizes[0])])
+sH = array('I', [0 for _ in xrange(sizes[1])])
+
 setV = {sizes[0]: 1, 1: 1}
 setH = {sizes[1]: 1, 1: 1}
 
 N = sizes[2]
-
+nv = 0
+nh = 0
 for x in xrange(N):
   (k, v) = raw_input().split()
 
   t[x] = k
-  a[x] = int(v)
+  n = int(v)
+  a[x] = n
+  if k == 'V':
+    dtV[n] = 1
+    sV[nv] = n
+    nv += 1
+  else:
+    dtH[n] = 1
+    sH[nv] = n
+    nh += 1
+
+mV = array('I', [0 for _ in xrange(nv)])
+mH = array('I', [0 for _ in xrange(nh)])
+
+sV = sV[0:nv]
+sH = sH[0:nh]
+
+sV = sorted(sV)
+maxV = 0 if len(sV) > 1 else sV[0]
+for x in xrange(nv-1):
+  diff = sV[x+1] - sV[x]
+  maxV = max(diff, maxV)
+
+mV[nv-1] = maxV
 
 # ----------------------------------------------------------
-for x in xrange(N):
+for x in xrange(nv-2, -1, -1):
 
-  pos = a[x]
+  pos = sV[x]
 
   f = 1
   b = 1
-  if t[x] == 'V':
-    while( True ):
-      if dtV[pos-f] == 1:
-        break
-      f += 1
-    while( True ):
-      if dtV[pos+b] == 1:
-        break
-      b += 1
-    dtV[pos] = 1
 
-    decr_dict( setV, b + f )
-    incr_dict( setV, f )
-    incr_dict( setV, b )
+  dtV[pos] = 0
+
+  while( True ):
+    if dtV[pos-f] == 1:
+      break
+    f += 1
+  while( True ):
+    if dtV[pos+b] == 1:
+      break
+    b += 1
+
+  maxV = max(f+b, maxV)
+  mV[x] = maxV
+
+
+# ----------------------------------------------------------
+
+sH = sorted(sH)
+maxH = 0 if len(sH) > 1 else sH[0]
+
+for x in xrange(nh-1):
+  diff = sH[x+1] - sH[x]
+  maxH = max(diff, maxH)
+
+mH[nh-1] = maxH
+
+print mH
+for x in xrange(nh-2, -1, -1):
+
+  pos = sH[x]
+
+  f = 1
+  b = 1
+
+  dtH[pos] = 0
+
+  while( True ):
+    if dtH[pos-f] == 1:
+      break
+    f += 1
+  while( True ):
+    if dtH[pos+b] == 1:
+      break
+    b += 1
+
+  maxH = max(f+b, maxH)
+  mH[x] = maxH
+
+print mH
+
+#for x in xrange(N-1, 0, -1):
+#
+#  pos = a[x]
+#
+#  f = 1
+#  b = 1
+#  if t[x] == 'V':
+#    while( True ):
+#      if dtV[pos-f] == 1:
+#        break
+#      f += 1
+#    while( True ):
+#      if dtV[pos+b] == 1:
+#        break
+#      b += 1
+#    dtV[pos] = 1
+#
+#    decr_dict( setV, b + f )
+#    incr_dict( setV, f )
+#    incr_dict( setV, b )
+#  else:
+#    while( True ):
+#      if dtH[pos-f] == 1:
+#        break
+#      f += 1
+#
+#    while( True ):
+#      if dtH[pos+b] == 1:
+#        break
+#      b += 1
+#    dtH[pos] = 1
+#
+#    decr_dict( setH, b + f )
+#    incr_dict( setH, f )
+#    incr_dict( setH, b )
+#
+#  a[x] = max(setH.keys()) * max(setV.keys())
+nv = 0
+nh = 0
+for x in xrange(N):
+  k = t[x]
+  a[x] = mV[nv] * mH[nh]
+  if k == 'V':
+    nh += 1
   else:
-    while( True ):
-      if dtH[pos-f] == 1:
-        break
-      f += 1
+    nv += 1
 
-    while( True ):
-      if dtH[pos+b] == 1:
-        break
-      b += 1
-    dtH[pos] = 1
-
-    decr_dict( setH, b + f )
-    incr_dict( setH, f )
-    incr_dict( setH, b )
-
-  a[x] = max(setH.keys()) * max(setV.keys())
-
-#end = time.clock()
+end = time.clock()
 
 for ans in a:
   print ans
 
-#print end - start
+print end - start
