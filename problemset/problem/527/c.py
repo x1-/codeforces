@@ -1,5 +1,6 @@
 import sys
-#import time
+import time
+import bisect
 from array import array
 
 
@@ -14,28 +15,38 @@ def max_diff( poses, n ):
 
 
 def search_max( poses, bits, n ):
-  max_df = max_diff( poses, n )
+  max_df = 0
+  s = sorted( poses )
+  #si = array('I', [0 for _ in xrange(n+1)])
+  for x in xrange(n):
+    #si[s[x]] = x
+    diff = s[x+1] - s[x]
+    max_df = max(diff, max_df)
+
+  #max_df = max_diff( poses, n )
   mxes = array('I', [0 for _ in xrange(n)])
   mxes[n-1] = max_df
 
   for x in xrange(n-1, 0, -1):
     pos = poses[x]
 
-    f = 1
-    b = 1
+#    f = 1
+#    b = 1
 
-    bits[pos] = 0
+    #bits[pos] = 0
+    l = bisect.bisect_left(s, pos, lo=1, hi=n)
+    df = s[ l+1 ] - s[ l-1 ]
+    print pos, df
+#    while( True ):
+#      if bits[pos-f] == 1:
+#        break
+#      f += 1
+#    while( True ):
+#      if bits[pos+b] == 1:
+#        break
+#      b += 1
 
-    while( True ):
-      if bits[pos-f] == 1:
-        break
-      f += 1
-    while( True ):
-      if bits[pos+b] == 1:
-        break
-      b += 1
-
-    max_df = max(f+b, max_df)
+    max_df = max(df, max_df)
     mxes[x-1] = max_df
 
   return mxes
@@ -113,6 +124,12 @@ dtV[sizes[0]] = 1
 dtH = array('B', [0 for _ in xrange(sizes[1]+1)])
 dtH[0] = 1
 dtH[sizes[1]] = 1
+
+dV = array('I', [0 for _ in xrange(sizes[0]+1)])
+dV[sizes[0]] = sizes[0]
+
+dH = array('I', [0 for _ in xrange(sizes[1]+1)])
+dH[sizes[1]] = sizes[1]
 
 sV = array('I', [0 for _ in xrange(sizes[0]+1)])
 sH = array('I', [0 for _ in xrange(sizes[1]+1)])
