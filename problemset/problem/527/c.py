@@ -1,53 +1,71 @@
 import sys
 import time
-import bisect
 from array import array
 
-
-def max_diff( poses, n ):
-  mx = 0
-  s = sorted( poses )
-  for x in xrange(n):
-    diff = s[x+1] - s[x]
-    mx = max(diff, mx)
-
-  return mx
-
-
-def search_max( poses, bits, n ):
+def search_max( poses, n ):
   max_df = 0
   s = sorted( poses )
-  #si = array('I', [0 for _ in xrange(n+1)])
+  si = array('I', [0 for _ in xrange(s[-1])])
   for x in xrange(n):
-    #si[s[x]] = x
+    si[s[x]] = x
     diff = s[x+1] - s[x]
     max_df = max(diff, max_df)
 
-  #max_df = max_diff( poses, n )
   mxes = array('I', [0 for _ in xrange(n)])
   mxes[n-1] = max_df
 
+  low  = s[1]
+  high = s[-2]
+
+#  print "h", high, "l", low
+
   for x in xrange(n-1, 0, -1):
     pos = poses[x]
+    i = si[pos]
 
-#    f = 1
-#    b = 1
+#    print "p", pos
 
-    #bits[pos] = 0
-    l = bisect.bisect_left(s, pos, lo=1, hi=n)
-    df = s[ l+1 ] - s[ l-1 ]
-    print pos, df
-#    while( True ):
-#      if bits[pos-f] == 1:
-#        break
-#      f += 1
-#    while( True ):
-#      if bits[pos+b] == 1:
-#        break
-#      b += 1
+    idx = 0
+    f = low
+    #print "low, i", si[low], i
+    if pos > low:
+#      print "pos>l", i-1, si[low]
+      for j in xrange(i-1, si[low]-1, -1):
+#        print j
+        if s[j] > 0:
+          f = s[j]
+          if idx > 100000:
+            print idx
+          break
+        idx += 1
 
+    b = high
+    idx = 0
+    if pos < high:
+      for j in xrange(i+1, si[high]+1):
+        if s[j] > 0:
+          b = s[j]
+          if idx > 100000:
+            print idx
+          break
+        idx += 1
+
+#    print "h", high, "l", low
+    if pos == low:
+      low = b
+      f = 0
+    if pos == high:
+      high = f
+      b = s[-1]
+#    print "h", high, "l", low
+#    print "f", f, "b", b
+
+    df = b - f
     max_df = max(df, max_df)
+#    print b, f, max_df
     mxes[x-1] = max_df
+
+    s[i] = 0
 
   return mxes
 
@@ -112,24 +130,10 @@ H 3
 
 sizes = map(int, raw_input().split())
 
-#start = time.clock()
+start = time.clock()
 
-a = array('I', [0 for _ in xrange(sizes[2])])
+a = [None] * sizes[2]
 t = array('c', [' ' for _ in xrange(sizes[2])])
-
-dtV = array('B', [0 for _ in xrange(sizes[0]+1)])
-dtV[0] = 1
-dtV[sizes[0]] = 1
-
-dtH = array('B', [0 for _ in xrange(sizes[1]+1)])
-dtH[0] = 1
-dtH[sizes[1]] = 1
-
-dV = array('I', [0 for _ in xrange(sizes[0]+1)])
-dV[sizes[0]] = sizes[0]
-
-dH = array('I', [0 for _ in xrange(sizes[1]+1)])
-dH[sizes[1]] = sizes[1]
 
 sV = array('I', [0 for _ in xrange(sizes[0]+1)])
 sH = array('I', [0 for _ in xrange(sizes[1]+1)])
@@ -144,11 +148,9 @@ for x in xrange(N):
   n = int(v)
   a[x] = n
   if k == 'V':
-    dtV[n] = 1
     sV[nv] = n
     nv += 1
   else:
-    dtH[n] = 1
     sH[nh] = n
     nh += 1
 
@@ -158,8 +160,8 @@ sH = sH[0:nh+1]
 sV[nv] = sizes[0]
 sH[nh] = sizes[1]
 
-diffsV = search_max( sV, dtV, nv )
-diffsH = search_max( sH, dtH, nh )
+diffsV = search_max( sV, nv )
+diffsH = search_max( sH, nh )
 
 nv = 0
 nh = 0
@@ -171,9 +173,10 @@ for x in xrange(N):
     nh += 1
   a[x] = diffsV[nv] * diffsH[nh]
 
-#end = time.clock()
+end = time.clock()
 
 for ans in a:
   print ans
 
-#print end - start
+print end - start
+sys.exit(0)
