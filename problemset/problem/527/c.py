@@ -1,79 +1,29 @@
 import sys
-import time
+#import time
 from array import array
 
 """
 search greater than zero
 """
-def search_gt_zero(xs, start, end, step):
-  for i in xrange(start, end, step):
+def search_gt_zero(xs, start, end, step, ignores):
+  i = start
+  while(True):
+    if step < 0 and i < end:
+      i = end
+      break
+    if step > 0 and i > end:
+      i = end
+      break
+    if ignores.has_key(i):
+      i = ignores[i] + step
+      continue
     if xs[i] > 0:
-      return xs[i]
-
-"""
-search next position
-"""
-def bin_search_next(xs, high, low):
-
-  if high == low:
-    return high
-
-  h = high
-  l = low
-  idx = (h+l)/2
-  found = h
-
-  while(h>l):
-#    if xs[h] > 0:
-#      found = h
-
-    h = h - 1
-
-    if xs[l] == 0:
-      l = l + 1
-    else:
-      found = l
       break
-
-    if xs[idx] > 0:
-      found = idx
-      h = idx - 1
-    idx = (h+l)/2
-
-  return found
-
-"""
-search previous position
-"""
-def bin_search_prev(xs, high, low):
-
-  if high == low:
-    return high
-
-  h = high
-  l = low
-  idx = (h+l)/2
-  found = 0
-
-  while(h>l):
-
-    if xs[l] > 0:
-      found = idx
-
-    l = l + 1
-
-    if xs[h] == 0:
-      h = h - 1
-    else:
-      found = h
+    if start == end:
       break
+    i = i + step
+  return i
 
-    if xs[idx] > 0:
-      found = idx
-      l = idx + 1
-    idx = (h+l)/2
-
-  return found
 
 """
 search max range
@@ -81,8 +31,9 @@ search max range
 def search_max( poses, n ):
 
   s = sorted( poses )
-#  si = array('I', [0 for _ in xrange(s[-1])])
-  si = {}
+  si = { s[-1]: n }
+  f_mita = {}
+  b_mita = {}
 
   max_df = 0
   for x in xrange(n):
@@ -103,22 +54,18 @@ def search_max( poses, n ):
     i = si[pos]
 
     f = low
+    fp = 0
     if pos > low:
-      if x < thh:
-        k = bin_search_prev(s, i-1, si[low])
-        f = s[k]
-      else:
-        f = search_gt_zero(s, i-1, si[low]-1, -1)
+      fp = search_gt_zero(s, i-1, si[low], -1, f_mita)
+      f = s[fp]
 
-#    print "high, si, i",high, si[high], i
 
     b = high
+    bp = n
     if pos < high:
-#      k = bin_search_next(s, si[high], i+1)
-#      b = s[k]
-      b = search_gt_zero(s, i+1, si[high]+1, 1)
+      bp = search_gt_zero(s, i+1, si[high], 1, b_mita)
+      b = s[bp]
 
-#    print "b,f", b, f
     if pos == low:
       low = b
       f = 0
@@ -128,9 +75,10 @@ def search_max( poses, n ):
 
     df = b - f
     max_df = max(df, max_df)
-
     mxes[x-1] = max_df
 
+    f_mita[bp-1] = fp+1
+    b_mita[fp+1] = bp-1
     s[i] = 0
 
   return mxes
@@ -194,7 +142,7 @@ H 3
 6
 """
 
-start = time.clock()
+#start = time.clock()
 
 sizes = map(int, raw_input().split())
 
@@ -243,10 +191,10 @@ for x in xrange(N):
     nh += 1
   a[x] = diffsV[nv] * diffsH[nh]
 
-end = time.clock()
+#end = time.clock()
 
 for ans in a:
   print ans
 
-print end - start
+#print end - start
 sys.exit(0)
