@@ -2,10 +2,89 @@ import sys
 import time
 from array import array
 
+"""
+search greater than zero
+"""
+def search_gt_zero(xs, start, end, step):
+  for i in xrange(start, end, step):
+    if xs[i] > 0:
+      return xs[i]
+
+"""
+search next position
+"""
+def bin_search_next(xs, high, low):
+
+  if high == low:
+    return high
+
+  h = high
+  l = low
+  idx = (h+l)/2
+  found = h
+
+  while(h>l):
+#    if xs[h] > 0:
+#      found = h
+
+    h = h - 1
+
+    if xs[l] == 0:
+      l = l + 1
+    else:
+      found = l
+      break
+
+    if xs[idx] > 0:
+      found = idx
+      h = idx - 1
+    idx = (h+l)/2
+
+  return found
+
+"""
+search previous position
+"""
+def bin_search_prev(xs, high, low):
+
+  if high == low:
+    return high
+
+  h = high
+  l = low
+  idx = (h+l)/2
+  found = 0
+
+  while(h>l):
+
+    if xs[l] > 0:
+      found = idx
+
+    l = l + 1
+
+    if xs[h] == 0:
+      h = h - 1
+    else:
+      found = h
+      break
+
+    if xs[idx] > 0:
+      found = idx
+      l = idx + 1
+    idx = (h+l)/2
+
+  return found
+
+"""
+search max range
+"""
 def search_max( poses, n ):
-  max_df = 0
+
   s = sorted( poses )
-  si = array('I', [0 for _ in xrange(s[-1])])
+#  si = array('I', [0 for _ in xrange(s[-1])])
+  si = {}
+
+  max_df = 0
   for x in xrange(n):
     si[s[x]] = x
     diff = s[x+1] - s[x]
@@ -17,52 +96,39 @@ def search_max( poses, n ):
   low  = s[1]
   high = s[-2]
 
-#  print "h", high, "l", low
+  thh = int(n/3)
 
   for x in xrange(n-1, 0, -1):
     pos = poses[x]
     i = si[pos]
 
-#    print "p", pos
-
-    idx = 0
     f = low
-    #print "low, i", si[low], i
     if pos > low:
-#      print "pos>l", i-1, si[low]
-      for j in xrange(i-1, si[low]-1, -1):
-#        print j
-        if s[j] > 0:
-          f = s[j]
-          if idx > 100000:
-            print idx
-          break
-        idx += 1
+      if x < thh:
+        k = bin_search_prev(s, i-1, si[low])
+        f = s[k]
+      else:
+        f = search_gt_zero(s, i-1, si[low]-1, -1)
+
+#    print "high, si, i",high, si[high], i
 
     b = high
-    idx = 0
     if pos < high:
-      for j in xrange(i+1, si[high]+1):
-        if s[j] > 0:
-          b = s[j]
-          if idx > 100000:
-            print idx
-          break
-        idx += 1
+#      k = bin_search_next(s, si[high], i+1)
+#      b = s[k]
+      b = search_gt_zero(s, i+1, si[high]+1, 1)
 
-#    print "h", high, "l", low
+#    print "b,f", b, f
     if pos == low:
       low = b
       f = 0
     if pos == high:
       high = f
       b = s[-1]
-#    print "h", high, "l", low
-#    print "f", f, "b", b
 
     df = b - f
     max_df = max(df, max_df)
-#    print b, f, max_df
+
     mxes[x-1] = max_df
 
     s[i] = 0
@@ -128,9 +194,9 @@ H 3
 6
 """
 
-sizes = map(int, raw_input().split())
-
 start = time.clock()
+
+sizes = map(int, raw_input().split())
 
 a = [None] * sizes[2]
 t = array('c', [' ' for _ in xrange(sizes[2])])
@@ -139,6 +205,8 @@ sV = array('I', [0 for _ in xrange(sizes[0]+1)])
 sH = array('I', [0 for _ in xrange(sizes[1]+1)])
 
 N = sizes[2]
+
+# collect inputs
 nv = 1
 nh = 1
 for x in xrange(N):
@@ -160,9 +228,11 @@ sH = sH[0:nh+1]
 sV[nv] = sizes[0]
 sH[nh] = sizes[1]
 
+# create max ranges
 diffsV = search_max( sV, nv )
 diffsH = search_max( sH, nh )
 
+# calculate h x w
 nv = 0
 nh = 0
 for x in xrange(N):
