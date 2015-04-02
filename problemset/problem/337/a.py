@@ -20,21 +20,19 @@ f1,f2,...,fm(4<=fi<=1000)
 nm     = map(int, raw_input().split())
 pieces = array('I', [ int(x) for x in raw_input().split() ])
 
-start = time.clock()
+#start = time.clock()
 
 n = nm[1] - nm[0] + 1
 spieces = sorted( pieces, reverse=True )
-print spieces
-min_diff = spieces[0] - spieces[n-1]
-print min_diff
+min_diff = spieces[0] - spieces[nm[0]-1]
+
 for i in xrange(n):
-  diff = spieces[i] - spieces[i+n-1]
-  print "d", diff
+  diff = spieces[i] - spieces[i+nm[0]-1]
   if diff < min_diff:
     min_diff = diff
 
-end = time.clock()
-print end - start
+#end = time.clock()
+#print end - start
 
 print min_diff
 sys.exit(0)
