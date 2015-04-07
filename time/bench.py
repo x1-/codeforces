@@ -68,15 +68,113 @@ n = int(sys.argv[1])
 #"""
 #xs = array('I', [ i for i in xrange(n) ])
 
-r = Random()
-xs = [i for i in xrange(n)]
-
-nums = range(1, size+1)
-r.shuffle(nums)
-
-
+#----------------------------
 # random read
+#----------------------------
+
+#"""
+#list
+#10000000	4.209885
+#"""
+#xs = [i for i in xrange(n)]
+
+#"""
+#array
+#10000000	3.29262
+#"""
+#xs = array('I', [ i for i in xrange(n) ])
+
+#"""
+#1byte array
+#10000000	3.257461
+#"""
+#xs = array('b', [ 1 for _ in xrange(n) ])
+#ix = [i for i in xrange(n)]
+#r = Random()
+#r.shuffle(ix)
+
+#start = time.clock()
+#tmp = 0
+#for i in ix:
+#  tmp = xs[i]
+
+#----------------------------
+# pop
+#----------------------------
+#"""
+#list
+#10000000	1.90925
+#"""
+#xs = [i for i in xrange(n)]
+
+#"""
+#array
+#10000000	3.137967
+#"""
+#xs = array('I', [i for i in xrange(n)])
+
+#start = time.clock()
+#for i in xrange(n):
+#  xs.pop()
+
+#----------------------------
+# pop(0)
+#----------------------------
+#"""
+#list
+#10000000	205.67833
+#"""
+#xs = [i for i in xrange(n)]
+
+#"""
+#array
+#10000000	93.492565
+#"""
+#xs = array('I', [i for i in xrange(n)])
+# 
+#start = time.clock()
+#for i in xrange(n):
+#  xs.pop(0)
+
+#----------------------------
+# insert(0)
+#----------------------------
+#"""
+#list
+#1000000	263.220432
+#"""
+#xs = []
+
+#"""
+#array
+#1000000	93.38436
+#"""
+#xs = array('I', [])
+
+#start = time.clock()
+#for i in xrange(n):
+#  xs.insert(0, i)
+
+#----------------------------
+# sort
+#----------------------------
+#"""
+#list
+#1000000	0.671997
+#"""
+#xs = [i for i in xrange(n)]
+
+#"""
+#array
+#1000000	0.730575
+#"""
+xs = array('I', [ i for i in xrange(n) ])
+
+r = Random()
+r.shuffle(xs)
+
 start = time.clock()
+xs = sorted(xs)
 
 end = time.clock()
 print end - start
