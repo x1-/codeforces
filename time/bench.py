@@ -1,6 +1,7 @@
 import sys
 import time
 from array import array
+import re
 import random
 from random import Random
 
@@ -168,13 +169,63 @@ n = int(sys.argv[1])
 #array
 #1000000	0.730575
 #"""
-xs = array('I', [ i for i in xrange(n) ])
+#xs = array('I', [ i for i in xrange(n) ])
+#
+#r = Random()
+#r.shuffle(xs)
+#
+#start = time.clock()
+#xs = sorted(xs)
 
+#----------------------------
+# string
+#----------------------------
+#"""
+#string.ascii_letters = string.ascii_lowercase + string.ascii_uppercase
+#string.ascii_lowercase = 'abcdefghijklmnopqrstuvwxyz'
+#string.ascii_uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+#string.digits = '0123456789'
+#string.hexdigits = '0123456789abcdefABCDEF'
+#"""
+
+search = '_SEARCH_'
+
+ix = [ i for i in xrange(n) ]
 r = Random()
-r.shuffle(xs)
+r.shuffle(ix)
+sp = int(n * 4 / 5)
+
+chs = list(string.ascii_letters)
+t = ''
+for i in ix[0:sp]:
+  m = i % 52
+  t += chs[m]
+
+t += search
+
+for i in ix[sp:]:
+  m = i % 52
+  t += chs[m]
 
 start = time.clock()
-xs = sorted(xs)
+
+#"""
+#find
+#1000000	0.730575
+#"""
+idx = t.find(search)
+
+#"""
+#in
+#1000000	0.730575
+#"""
+idx = t in search
+
+#"""
+#re
+#1000000	0.730575
+#"""
+mo = re.match(search, t)
 
 end = time.clock()
 print end - start
