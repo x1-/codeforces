@@ -13,11 +13,16 @@ quoter = n / 4
 #print "n/2", max_split
 #print "p1: %d, p2: %d" % (p1, p2)
 res = 'no'
-for i in xrange(quoter):
+for i in xrange(n):
   ok = True
+
+  quoter = (n - i)/ 4
+  if quoter < 1:
+    break
+
   for j in xrange(4):
     pos = i + j * quoter
-    print pos, ds[pos]
+    #print pos, ds[pos]
     if ds[pos] == '.':
       ok = False
       break
