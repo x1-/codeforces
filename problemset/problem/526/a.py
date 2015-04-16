@@ -1,33 +1,34 @@
 import sys
 import time
 
-"""
-"""
 n = input()
 ds = list(raw_input())
 
 start = time.clock()
 
-quoter = n / 4
-
-#print "n/2", max_split
-#print "p1: %d, p2: %d" % (p1, p2)
+q = n / 4
 res = 'no'
+
 for i in xrange(n):
-  ok = True
 
-  quoter = (n - i)/ 4
-  if quoter < 1:
-    break
+  for j in xrange(4, 6):
+    quoter = n / j
+    fall = False
+    count = 0
 
-  for j in xrange(4):
-    pos = i + j * quoter
-    #print pos, ds[pos]
-    if ds[pos] == '.':
-      ok = False
+    for k in xrange(i, n, quoter):
+      #print k, ds[k]
+      if ds[k] == '*':
+        count += 1
+      else:
+        fall = True
+        break
+
+    if count == 4 and not fall:
+      res = 'yes'
       break
-  if ok:
-    res = 'yes'
+
+  if res == 'yes':
     break
 
 end = time.clock()
