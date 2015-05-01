@@ -1,9 +1,13 @@
+#!/usr/bin/env python
+#-*- encoding: utf-8 -*-
+
 import sys
 import time
-from array import array
+import string
 import re
 import random
 from random import Random
+from array import array
 
 #start = time.clock()
 
@@ -211,21 +215,36 @@ start = time.clock()
 
 #"""
 #find
-#1000000	0.730575
+#1000000	330.579883
 #"""
-idx = t.find(search)
+#for i in xrange(n):
+#  idx = t.find(search)
 
 #"""
 #in
-#1000000	0.730575
+#1000000	329.516237
 #"""
-idx = t in search
+#for i in xrange(n):
+#  idx = search in t
 
 #"""
 #re
-#1000000	0.730575
+#1000000	689.246231
 #"""
-mo = re.match(search, t)
+#for i in xrange(n):
+#  m = re.search(search, t)
+#  idx = m.start()
+
+#"""
+#re 事前にコンパイル
+#1000000	695.375025
+#"""
+#p = re.compile(search)
+#for i in xrange(n):
+#  m = p.search(t)
+#  idx = m.start()
+
+
 
 end = time.clock()
 print end - start
