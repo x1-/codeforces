@@ -9,188 +9,195 @@ import random
 from random import Random
 from array import array
 
-#start = time.clock()
-
 n = int(sys.argv[1])
 
-#"""
-## list append
-#100000	0.027873
-#1000000	0.260543
-#10000000	2.558889
-#"""
-##xs = []
-##for i in xrange(n):
-##  xs.append(i)
-# 
-#"""
-#for
-#100000	0.015099
-#1000000	0.14847
-#10000000	1.42081
-#"""
-##xs = [i for i in xrange(n)]
-# 
-#"""
-#[None]
-#100000	0.016606
-#1000000	0.179783
-#10000000	1.727175
-#"""
-##xs = [None] * n
-##for i in xrange(n):
-##  xs[i]
-# 
-#"""
-#[None] only
-#100000	0.000724
-#1000000	0.006474
-#10000000	0.071949
-#"""
-#xs = [None] * n
+#----------------------------
+# append
+#----------------------------
+start = time.clock()
 
-#"""
-#[None]
-#100000	0.000803
-#1000000	0.006982
-#10000000	0.074916
-#"""
-#xs = [0] * n
+"""
+# list append
+1000000	0.156414
+"""
+xs = []
+for i in xrange(n):
+  xs.append(i)
 
-#"""
-#array
-#100000	0.018191
-#1000000	0.164888
-#10000000	1.853745
-#"""
-#xs = array('I', [ 0 for _ in xrange(n) ])
+"""
+for
+1000000	0.0876
+"""
+xs = [i for i in xrange(n)]
 
-#"""
-#array
-#100000	0.024631
-#1000000	0.232682
-#10000000	2.49165
-#"""
-#xs = array('I', [ i for i in xrange(n) ])
+"""
+[None]
+1000000	0.099896
+"""
+xs = [None] * n
+for i in xrange(n):
+  xs[i]
+
+"""
+[None] only
+1000000	0.005255
+"""
+xs = [None] * n
+
+"""
+[0]
+1000000	0.005359
+"""
+xs = [0] * n
+
+"""
+array
+1000000	0.108973
+"""
+xs = array('I', [ 0 for _ in xrange(n) ])
+
+"""
+array
+1000000	0.149061
+"""
+xs = array('I', [ i for i in xrange(n) ])
 
 #----------------------------
 # random read
 #----------------------------
+r = Random()
+ix = [i for i in xrange(n)]
+r.shuffle(ix)
 
-#"""
-#list
-#10000000	4.209885
-#"""
-#xs = [i for i in xrange(n)]
+nay = [i for i in xrange(n)]
+iay = array('I', [ i for i in xrange(n) ])
+bay = array('b', [ 1 for _ in xrange(n) ])
 
-#"""
-#array
-#10000000	3.29262
-#"""
-#xs = array('I', [ i for i in xrange(n) ])
+start = time.clock()
 
-#"""
-#1byte array
-#10000000	3.257461
-#"""
-#xs = array('b', [ 1 for _ in xrange(n) ])
-#ix = [i for i in xrange(n)]
-#r = Random()
-#r.shuffle(ix)
+"""
+list
+10000000	0.367742
+"""
+tmp = 0
+for i in ix:
+  tmp = nay[i]
 
-#start = time.clock()
-#tmp = 0
-#for i in ix:
-#  tmp = xs[i]
+"""
+array
+10000000	0.263049
+"""
+tmp = 0
+for i in ix:
+  tmp = iay[i]
+
+"""
+1byte array
+10000000	0.232178
+"""
+tmp = 0
+for i in ix:
+  tmp = bay[i]
 
 #----------------------------
 # pop
 #----------------------------
-#"""
-#list
-#10000000	1.90925
-#"""
-#xs = [i for i in xrange(n)]
+nay = [i for i in xrange(n)]
+iay = array('I', [i for i in xrange(n)])
 
-#"""
-#array
-#10000000	3.137967
-#"""
-#xs = array('I', [i for i in xrange(n)])
+start = time.clock()
 
-#start = time.clock()
-#for i in xrange(n):
-#  xs.pop()
+"""
+list
+10000000	0.205749
+"""
+for i in xrange(n):
+  nay.pop()
+
+"""
+array
+10000000	0.302395
+"""
+for i in xrange(n):
+  iay.pop()
 
 #----------------------------
 # pop(0)
 #----------------------------
-#"""
-#list
-#10000000	205.67833
-#"""
-#xs = [i for i in xrange(n)]
+nay = [i for i in xrange(n)]
+iay = array('I', [i for i in xrange(n)])
 
-#"""
-#array
-#10000000	93.492565
-#"""
-#xs = array('I', [i for i in xrange(n)])
-# 
-#start = time.clock()
-#for i in xrange(n):
-#  xs.pop(0)
+start = time.clock()
+
+"""
+list
+10000000	182.47865
+"""
+for i in xrange(n):
+  nay.pop(0)
+
+"""
+array
+10000000	85.623589
+"""
+for i in xrange(n):
+  iay.pop(0)
 
 #----------------------------
 # insert(0)
 #----------------------------
-#"""
-#list
-#1000000	263.220432
-#"""
-#xs = []
+nay = []
+iay = array('I', [])
 
-#"""
-#array
-#1000000	93.38436
-#"""
-#xs = array('I', [])
+start = time.clock()
 
-#start = time.clock()
-#for i in xrange(n):
-#  xs.insert(0, i)
+"""
+list
+1000000	241.515497
+"""
+for i in xrange(n):
+  nay.insert(0, i)
+
+"""
+array
+1000000	86.058389
+"""
+for i in xrange(n):
+  iay.insert(0, i)
 
 #----------------------------
 # sort
 #----------------------------
-#"""
-#list
-#1000000	0.671997
-#"""
-#xs = [i for i in xrange(n)]
+r = Random()
+nay = [i for i in xrange(n)]
+iay = array('I', [ i for i in xrange(n) ])
 
-#"""
-#array
-#1000000	0.730575
-#"""
-#xs = array('I', [ i for i in xrange(n) ])
-#
-#r = Random()
-#r.shuffle(xs)
-#
-#start = time.clock()
-#xs = sorted(xs)
+start = time.clock()
+
+"""
+list
+1000000	1.13676
+"""
+r.shuffle(nay)
+xs = sorted(nay)
+
+"""
+array
+1000000	1.127885
+"""
+r.shuffle(iay)
+xs = sorted(iay)
 
 #----------------------------
 # string
 #----------------------------
-#"""
-#string.ascii_letters = string.ascii_lowercase + string.ascii_uppercase
-#string.ascii_lowercase = 'abcdefghijklmnopqrstuvwxyz'
-#string.ascii_uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-#string.digits = '0123456789'
-#string.hexdigits = '0123456789abcdefABCDEF'
-#"""
+"""
+string.ascii_letters = string.ascii_lowercase + string.ascii_uppercase
+string.ascii_lowercase = 'abcdefghijklmnopqrstuvwxyz'
+string.ascii_uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+string.digits = '0123456789'
+string.hexdigits = '0123456789abcdefABCDEF'
+"""
 
 search = '_SEARCH_'
 
@@ -206,45 +213,83 @@ for i in ix[0:sp]:
   t += chs[m]
 
 t += search
-
 for i in ix[sp:]:
   m = i % 52
   t += chs[m]
 
 start = time.clock()
 
-#"""
-#find
-#1000000	330.579883
-#"""
-#for i in xrange(n):
-#  idx = t.find(search)
 
-#"""
-#in
-#1000000	329.516237
-#"""
-#for i in xrange(n):
-#  idx = search in t
+"""
+find
+1000000	322.414854
+"""
+for i in xrange(n):
+  idx = t.find(search)
 
-#"""
-#re
-#1000000	689.246231
-#"""
-#for i in xrange(n):
-#  m = re.search(search, t)
-#  idx = m.start()
+"""
+in
+1000000	314.847081
+"""
+for i in xrange(n):
+  idx = search in t
 
-#"""
-#re 事前にコンパイル
-#1000000	695.375025
-#"""
-#p = re.compile(search)
-#for i in xrange(n):
-#  m = p.search(t)
-#  idx = m.start()
+"""
+re
+1000000	674.792997
+"""
+for i in xrange(n):
+  m = re.search(search, t)
+  idx = m.start()
+
+"""
+re 事前にコンパイル
+1000000	674.394229
+"""
+p = re.compile(search)
+for i in xrange(n):
+  m = p.search(t)
+  idx = m.start()
 
 
+#----------------------------
+# raw_input & print
+#----------------------------
+start = time.clock()
+"""
+raw_input で 標準入力を受け取りながら出力
+1000000	3.504401
+"""
+for i in xrange(n):
+  x = int(raw_input()) / 10
+  print x
+
+"""
+結果をバッファリング
+1000000	3.268692
+"""
+res = []
+for i in xrange(n):
+  res.append( int(raw_input()) / 10 )
+for i in res:
+  print i
+
+"""
+raw_input で 標準入力をすべて受け取ってから出力
+1000000	3.22516
+"""
+xs = [ int(raw_input()) for _ in xrange(n) ]
+for i in xs:
+  x = i / 10
+  print x
+
+"""
+raw_input で 標準入力をすべて受け取りバッファリングした結果を出力
+1000000	3.125762
+"""
+xs = [ int(raw_input()) / 10 for _ in xrange(n) ]
+for i in xs:
+  print i
 
 end = time.clock()
 print end - start
