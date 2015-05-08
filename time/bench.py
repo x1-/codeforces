@@ -17,7 +17,7 @@ n = int(sys.argv[1])
 start = time.clock()
 
 """
-# list append
+1. list append
 1000000	0.156414
 """
 xs = []
@@ -25,13 +25,13 @@ for i in xrange(n):
   xs.append(i)
 
 """
-for
+2. for
 1000000	0.0876
 """
 xs = [i for i in xrange(n)]
 
 """
-[None]
+3. [None]
 1000000	0.099896
 """
 xs = [None] * n
@@ -39,25 +39,25 @@ for i in xrange(n):
   xs[i]
 
 """
-[None] only
+4. [None] only
 1000000	0.005255
 """
 xs = [None] * n
 
 """
-[0]
+5. [0]
 1000000	0.005359
 """
 xs = [0] * n
 
 """
-array
+6. array
 1000000	0.108973
 """
 xs = array('I', [ 0 for _ in xrange(n) ])
 
 """
-array
+7. array
 1000000	0.149061
 """
 xs = array('I', [ i for i in xrange(n) ])
@@ -76,7 +76,7 @@ bay = array('b', [ 1 for _ in xrange(n) ])
 start = time.clock()
 
 """
-list
+1. list
 10000000	0.367742
 """
 tmp = 0
@@ -84,7 +84,7 @@ for i in ix:
   tmp = nay[i]
 
 """
-array
+2. array
 10000000	0.263049
 """
 tmp = 0
@@ -92,7 +92,7 @@ for i in ix:
   tmp = iay[i]
 
 """
-1byte array
+3. 1byte array
 10000000	0.232178
 """
 tmp = 0
@@ -108,14 +108,14 @@ iay = array('I', [i for i in xrange(n)])
 start = time.clock()
 
 """
-list
+1. list
 10000000	0.205749
 """
 for i in xrange(n):
   nay.pop()
 
 """
-array
+2. array
 10000000	0.302395
 """
 for i in xrange(n):
@@ -130,14 +130,14 @@ iay = array('I', [i for i in xrange(n)])
 start = time.clock()
 
 """
-list
+1. list
 10000000	182.47865
 """
 for i in xrange(n):
   nay.pop(0)
 
 """
-array
+2. array
 10000000	85.623589
 """
 for i in xrange(n):
@@ -152,14 +152,14 @@ iay = array('I', [])
 start = time.clock()
 
 """
-list
+1. list
 1000000	241.515497
 """
 for i in xrange(n):
   nay.insert(0, i)
 
 """
-array
+2. array
 1000000	86.058389
 """
 for i in xrange(n):
@@ -175,14 +175,14 @@ iay = array('I', [ i for i in xrange(n) ])
 start = time.clock()
 
 """
-list
+1. list
 1000000	1.13676
 """
 r.shuffle(nay)
 xs = sorted(nay)
 
 """
-array
+2. array
 1000000	1.127885
 """
 r.shuffle(iay)
@@ -219,23 +219,22 @@ for i in ix[sp:]:
 
 start = time.clock()
 
-
 """
-find
+1. find
 1000000	322.414854
 """
 for i in xrange(n):
   idx = t.find(search)
 
 """
-in
+2. in
 1000000	314.847081
 """
 for i in xrange(n):
   idx = search in t
 
 """
-re
+3. re
 1000000	674.792997
 """
 for i in xrange(n):
@@ -243,7 +242,7 @@ for i in xrange(n):
   idx = m.start()
 
 """
-re 事前にコンパイル
+4. re 事前にコンパイル
 1000000	674.394229
 """
 p = re.compile(search)
@@ -257,7 +256,7 @@ for i in xrange(n):
 #----------------------------
 start = time.clock()
 """
-raw_input で 標準入力を受け取りながら出力
+1. raw_input で 標準入力を受け取りながら出力
 1000000	3.504401
 """
 for i in xrange(n):
@@ -265,7 +264,7 @@ for i in xrange(n):
   print x
 
 """
-結果をバッファリング
+2. 結果をバッファリング
 1000000	3.268692
 """
 res = []
@@ -275,7 +274,7 @@ for i in res:
   print i
 
 """
-raw_input で 標準入力をすべて受け取ってから出力
+3. raw_input で 標準入力をすべて受け取ってから出力
 1000000	3.22516
 """
 xs = [ int(raw_input()) for _ in xrange(n) ]
@@ -284,7 +283,7 @@ for i in xs:
   print x
 
 """
-raw_input で 標準入力をすべて受け取りバッファリングした結果を出力
+4. raw_input で 標準入力をすべて受け取りバッファリングした結果を出力
 1000000	3.125762
 """
 xs = [ int(raw_input()) / 10 for _ in xrange(n) ]
