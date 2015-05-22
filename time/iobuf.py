@@ -6,7 +6,7 @@ from benchmarker import Benchmarker
 
 n = int(sys.argv[1]) if len(sys.argv) > 1 else 1000*1000
 
-with Benchmarker(1000*1000, width=22, cycle=3) as bench:
+with Benchmarker(n, width=22, cycle=3) as bench:
     @bench("no buffering")
     def _(bm):
         for i in xrange(n):
